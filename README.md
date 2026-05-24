@@ -30,3 +30,13 @@ I am trying to learn computer science concepts by implementing them. This Repo w
 # Chapter 5: Distributed Data
     - Issues with the distributed data
     
+# Chapter 6: Replication
+    - Popular algorithm for replicating changes between nodes: single-leader, multi-leader, and leaderless replication.
+     -single leader: Write comes to a single point when that write is successful it is replicated to other databases i.e., followers. Issue with this approach is every this relies on a single leader if that leader is down then the whole system is down. There can be a outage until next leader is elected. 
+        - Another reason is that sync replication, if any of the node is down then the whole replication is not working. 
+        - Other issue is with async approch that there is no way to recover data
+        - Another issue is with data that client might not be getting the latest data. Then in this case client need to maintain a timestamp and compare with the db timestamp. There is one issue with time as well because different time zones will have different time data. Metadata is also needed to syncronised for it.
+    -multi leader selection: Does not make sense in a single data center. 
+
+
+# TODO: Write sstable and LSM trees. Write ahead log.
