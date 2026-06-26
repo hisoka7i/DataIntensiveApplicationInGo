@@ -37,6 +37,21 @@ I am trying to learn computer science concepts by implementing them. This Repo w
         - Other issue is with async approch that there is no way to recover data
         - Another issue is with data that client might not be getting the latest data. Then in this case client need to maintain a timestamp and compare with the db timestamp. There is one issue with time as well because different time zones will have different time data. Metadata is also needed to syncronised for it.
     -multi leader selection: Does not make sense in a single data center. 
+        Setting up new followers: 
+            a. Take snapshots of the leader at regular interval. 
+            b. Follower takes the latest snapshot
+            c. Follower after adding the snapshot data ask the leader for the data that was added after that snapshot. 
+            d. When all that remaining data is added to the follower then we say that the follower is caught up.
+        (note: This snapshot is associated with exact leader position. This position has various different names like log sequence number(postgresSQL) and binlof coordinates(MySql))
+        Handling nodes outages:
+            We are trying to reboot the node without and downtime. 
+            Follower failure: This is quite easy in the sense that it can recover from the log. Take last snapshot and then ask the additional data changes from the leader.
+            Leader failure: This is tricky: 
+                a. How to identify if the leader is down? Most system use timeout, but timeout should not be less. 
+                b. How to select the next leader? This is done through election or perviously set controller.
+                c. How to followers identify its new leader? 
+                d. What happens when the prev leader comes back online? Some times both leaders starts to accept the write request which leads to data curruption. Some times prev leader has its counter which is slightly less than the newly selected leader and this leads to data inaccuracy.
+                    d.1: We need to should down one of the leader to solve this issue, but some times both the leaders are shut down.
 
 
 # TODO: Write sstable and LSM trees. Write ahead log.
